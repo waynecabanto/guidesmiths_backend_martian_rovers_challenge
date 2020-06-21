@@ -2,19 +2,14 @@
 
 
 ### Deployed link of the project:
-    Wayne Cabanto: Martian Rovers (https://waynecabanto-martian-rovers.herokuapp.com/)
+[Wayne Cabanto: Martian Rovers](https://waynecabanto-martian-rovers.herokuapp.com/)
 
 ### Assumptions
 * The rover's North is faced towards the right hand side. ------>>>
     This assumption is based on the instruction: 
     "The direction North corresponds to the direction from grid point (x, y) to grid point (x, y+1)."
 * Having North to right, East points downwards and West upwards. Like so:
-                W
-                |
-            S —————— N
-                |
-                E
-
+    https://github.com/waynecabanto/guidesmiths-backend-rover-challenge/blob/master/compass.jpg?raw=true
 ### Sample Input
 The world's maximum dimension is 50x50. The input is made by a POST Request through the link above or
 through the localhost if deployed locally. 
