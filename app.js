@@ -29,6 +29,7 @@ app.post('/', (req,res) => {
     var world_col = req.body.world.y;
     var continue_build = checkWorld.checkWorld(world_row, world_col);
     var all_rovers = [];
+
     if (continue_build)
     {
         var world = createWorld.createWorld(world_row, world_col);
@@ -36,7 +37,7 @@ app.post('/', (req,res) => {
         //rovers start exploring
         var userInput = req.body.userInput;
         var i;
-        var rover = {
+        const rover = {
             curr_pos_x: 0,
             curr_pos_y: 0,
             curr_direction: '',
@@ -83,30 +84,28 @@ app.post('/', (req,res) => {
             
             
 
+            console.log('ROVER DATA BEFORE PUSHING TO ALL_ROVERS: ');
+            console.log("x: " + rover.curr_pos_x + ", y: " + rover.curr_pos_y +", direction: " + rover.curr_direction
+                +", lost: " + rover.lost);
+
             //we save current rover before moving on to the next
-            all_rovers.push(rover);
+            all_rovers.push({
+                curr_pos_x: rover.curr_pos_x, 
+                curr_pos_y: rover.curr_pos_y, 
+                curr_direction: rover.curr_direction, 
+                lost: rover.lost
+            });
         }
 
-        res.send({all_rovers,world});
+        //reply to API Request with world data
+        //res.send({all_rovers,world});
+
+        //reply to API Request without world data
+        res.send({all_rovers});
     }else{
         res.send("World coordinates should be lower than 50.");
     }
 });
-
-/*app.get('/:curr_dir/:where_to_go', (req,res) => {
-    let curr_dir = req.params.curr_dir;
-    let where_to_go = req.params.where_to_go;
-    let x = processor.changeDirection(curr_dir,where_to_go);
-    res.send(curr_dir+where_to_go+': ' + x);
-});*/
-
-/*app.get('/:world_x/:world_y', (req,res) => {
-    let world_x = req.params.world_x;
-    let world_y = req.params.world_y;
-    let x = processor.checkWorld(world_x, world_y);
-    res.send('Lower than 50? ' + x);
-});*/
-
 
 
 const PORT = process.env.PORT || 3000;
