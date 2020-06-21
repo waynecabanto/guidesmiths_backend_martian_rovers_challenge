@@ -1,10 +1,14 @@
 const express = require('express');
-//const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const processor = require('./functions/processor');
-//require('dotenv/config');
+
+
+//imported functions
+const checkWorld = require('./functions/checkWorld');
+const createWorld = require('./functions/createWorld');
+const changeDirection = require('./functions/changeDirection');
+const executeForward = require('./functions/executeForward');
 
 
 //middleware
@@ -12,19 +16,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
-//routes
-//app.use('/phones', phonesRoute);
-
-
 //GET
 app.get('/', (req,res) => {
-    res.send('We are on home.' + processor.getName());
-});
-
-
-//post test
-app.post('/test', (req, res) => {
-    res.send(req.body);
+    res.send('We are on home.');
 });
 
 //POST
@@ -33,11 +27,11 @@ app.post('/', (req,res) => {
     //build world
     var world_row = req.body.world.x;
     var world_col = req.body.world.y;
-    var continue_build = processor.checkWorld(world_row, world_col);
+    var continue_build = checkWorld.checkWorld(world_row, world_col);
     var all_rovers = [];
     if (continue_build)
     {
-        var world = processor.createWorld(world_row, world_col);
+        var world = createWorld.createWorld(world_row, world_col);
 
         //rovers start exploring
         var userInput = req.body.userInput;
@@ -58,6 +52,9 @@ app.post('/', (req,res) => {
             rover.curr_direction = userInput[i].start_pos.direction;
             rover.lost = false;
             
+
+            //check data
+            console.log("check param from start: direction:" +rover.curr_direction+" x:"+rover.curr_pos_x+" y:"+rover.curr_pos_y);
             //get command data
             var command_length = userInput[i].movement.length; 
             var command_string = userInput[i].movement;
@@ -68,31 +65,20 @@ app.post('/', (req,res) => {
             for(j = 0; j < command_length; j++){
                 var command = command_string.charAt(j);
 
-                //res.send(rover.curr_direction + ' ... command: ' + command + 'current loop: ' + i);
-
                 switch(command){
                     case "L":
-                    case "R":
-                        var str = processor.changeDirection(rover.curr_direction, command);
+                    case "R": //if L or R
+                        var str = changeDirection.changeDirection(rover.curr_direction, command);
                         rover.curr_direction = str;
-                        //res.send(rover.curr_direction + ' ... command: <br/>' + command );
                         break;
                     case "F":
-                        //in moveForward, it'll check if a rover died in the place already first before moving forward.
-                        //res.send(rover);
-                        //res.send('command: ' +  command_string)
-                        //res.send(rover);
-                        var forwardOutput = processor.executeForward(world, rover, world_row, world_col);
-                        //res.send({forwardOutput});
-                        world = forwardOutput.world;
-                        rover = forwardOutput.rover;
+                        executeForward.executeForward(world, rover, world_row, world_col);
                         break;
                 }
                 console.log("command: "+command);
-                console.log(rover.curr_pos_x);
-                console.log(rover.curr_pos_y);
-                console.log(rover.curr_direction);
-                if(rover.lost) break;
+                console.log("x: " + rover.curr_pos_x + ", y: " + rover.curr_pos_y +", direction: " + rover.curr_direction
+                +", lost: " + rover.lost);
+                
             }//end for command string
             
             
@@ -114,12 +100,12 @@ app.post('/', (req,res) => {
     res.send(curr_dir+where_to_go+': ' + x);
 });*/
 
-app.get('/:world_x/:world_y', (req,res) => {
+/*app.get('/:world_x/:world_y', (req,res) => {
     let world_x = req.params.world_x;
     let world_y = req.params.world_y;
     let x = processor.checkWorld(world_x, world_y);
     res.send('Lower than 50? ' + x);
-});
+});*/
 
 
 
