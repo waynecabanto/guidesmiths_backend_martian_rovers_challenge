@@ -2,7 +2,7 @@
 
 
 ### Deployed link of the project:
-[Wayne Cabanto: Martian Rovers](https://waynecabanto-martian-rovers.herokuapp.com/)
+https://waynecabanto-martian-rovers.herokuapp.com/
 
 ### Assumptions
 * The rover's North is faced towards the right hand side. ------>>>
